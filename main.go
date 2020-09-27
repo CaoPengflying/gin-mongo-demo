@@ -40,13 +40,13 @@ func main() {
 		dao.Insert(user)
 	})
 	server := web.NewService(
-		//web.Address(":8001"),
+		web.Address(":8001"),
 		web.Handler(r),
 		web.Registry(consulReg),
 		web.Name("micro-demo"),
 		web.Metadata(map[string]string{"protocol": "http"}),
 	)
-	server.Init()
+	//server.Init()
 	err := server.Run()
 	if err != nil {
 		fmt.Println(err)
