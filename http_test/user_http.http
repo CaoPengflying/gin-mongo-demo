@@ -1,0 +1,16 @@
+POST 127.0.0.1:8001/createUser
+Content-Type: application/json
+
+{
+  "name": "cpf",
+  "age": 27,
+  "orgNo": "0004"
+}
+###
+
+POST 127.0.0.1:8001/getByName
+Content-Type: application/json
+
+{
+"name": "cpf"
+}
