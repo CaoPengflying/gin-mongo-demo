@@ -2,6 +2,7 @@ package dao
 
 import (
 	"gin-mongo-demo/entity"
+	"strconv"
 	"testing"
 )
 
@@ -13,6 +14,21 @@ func TestInsert(t *testing.T) {
 		OrgNo:  "A003",
 	}
 	Insert(user)
+}
+
+func TestInsertList(t *testing.T) {
+	for i := 0; i < 1000; i++ {
+		t.Log(i)
+		name := "000000" + strconv.Itoa(i)
+		user := entity.User{
+			Name:   name[len(name)-6:],
+			UserNo: name[len(name)-6:],
+			Age:    27,
+			OrgNo:  "A" + name[len(name)-6:],
+		}
+		Insert(user)
+	}
+
 }
 
 func TestGetByName(t *testing.T) {
