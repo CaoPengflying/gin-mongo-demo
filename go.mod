@@ -33,6 +33,7 @@ require (
 	github.com/nats-io/jwt v1.0.1 // indirect
 	github.com/nats-io/nats-server/v2 v2.1.8 // indirect
 	github.com/nats-io/nkeys v0.2.0 // indirect
+	github.com/stretchr/testify v1.4.0
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200427203606-3cfed13b9966 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	go.mongodb.org/mongo-driver v1.4.1

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"gin-mongo-demo/config"
+	"gin-mongo-demo/constants"
 	"gin-mongo-demo/entity"
 	"gopkg.in/mgo.v2/bson"
 	"log"
@@ -13,7 +14,7 @@ import (
 func Insert(u entity.User) {
 	session := config.GetSession()
 	defer session.Close()
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	err := c.Insert(u)
 	if err != nil {
 		log.Fatal(err)
@@ -24,8 +25,8 @@ func UpdateByName(user *entity.User) {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
-	query := bson.M{"name": user.Name}
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
+	query := bson.M{entity.UserName: user.Name}
 	err := c.Update(query, user)
 	if err != nil {
 		log.Fatal(err)
@@ -35,15 +36,12 @@ func UpdateByName(user *entity.User) {
 /**
 根据主键删除文档
 */
-func DeleteById(id string) {
+func DeleteById(id bson.ObjectId) error {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
-	err := c.RemoveId(id)
-	if err != nil {
-		log.Fatal(err)
-	}
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
+	return c.RemoveId(id)
 }
 
 /**
@@ -53,9 +51,9 @@ func GetByName(name string) *entity.User {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	user := entity.User{}
-	query := bson.M{"name": name}
+	query := bson.M{entity.UserName: name}
 	err := c.Find(query).One(&user)
 	if err != nil {
 		panic(err)
@@ -70,9 +68,9 @@ func ListByOrgNo(orgNo string) []entity.User {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	var userList []entity.User
-	query := bson.M{"org_no": orgNo}
+	query := bson.M{entity.UserOrgNo: orgNo}
 	err := c.Find(query).All(&userList)
 	if err != nil {
 		panic(err)
@@ -87,9 +85,9 @@ func GetByOrgNoOrName(orgNo string, name string) []entity.User {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	var userList []entity.User
-	query := bson.M{"$or": []bson.M{{"org_no": orgNo}, {"name": name}}}
+	query := bson.M{"$or": []bson.M{{entity.UserOrgNo: orgNo}, {entity.UserName: name}}}
 	err := c.Find(query).All(&userList)
 	if err != nil {
 		panic(err)
@@ -104,9 +102,9 @@ func ListByOrgNos(orgNos []string) []entity.User {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	var userList []entity.User
-	query := bson.M{"org_no": bson.M{"$in": orgNos}}
+	query := bson.M{entity.UserOrgNo: bson.M{"$in": orgNos}}
 	err := c.Find(query).All(&userList)
 	if err != nil {
 		panic(err)
@@ -121,9 +119,9 @@ func ListByGtAge(age int) []entity.User {
 	session := config.GetSession()
 	defer session.Close()
 
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	var userList []entity.User
-	query := bson.M{"age": bson.M{"$gt": age}}
+	query := bson.M{entity.UserAge: bson.M{"$gt": age}}
 	err := c.Find(query).All(&userList)
 	if err != nil {
 		panic(err)
@@ -137,10 +135,10 @@ func ListByGtAge(age int) []entity.User {
 func ListByNotEq(name string) []entity.User {
 	session := config.GetSession()
 	defer session.Close()
-	c := session.DB("egg_cnode").C("user")
+	c := session.DB(constants.DbEggCnode).C(constants.ColUser)
 	var userList []entity.User
-	query := bson.M{"name": bson.M{"neq": name}}
-	err := c.Find(query).All(&userList)
+	query := bson.M{entity.UserName: bson.M{"$ne": name}}
+	err := c.Find(query).Limit(constants.PageOffset).All(&userList)
 	if err != nil {
 		panic(err)
 	}

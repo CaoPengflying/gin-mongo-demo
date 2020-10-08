@@ -2,6 +2,7 @@ package dao
 
 import (
 	"gin-mongo-demo/entity"
+	"github.com/stretchr/testify/require"
 	"strconv"
 	"testing"
 )
@@ -74,4 +75,22 @@ func TestUpdateById(t *testing.T) {
 	user := GetByName(name)
 	user.UserNo = "0004"
 	UpdateByName(user)
+}
+
+func TestDeleteById(t *testing.T) {
+	tests := []struct{
+		name string
+		wantErr bool
+	}{
+		{
+			"000000",false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			user := GetByName(tt.name)
+			err := DeleteById(user.Id)
+			require.Equalf(t, tt.wantErr, err != nil, "delete by id error = %v", err, tt.wantErr)
+		})
+	}
 }
