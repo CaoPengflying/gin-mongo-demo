@@ -1,10 +1,12 @@
 package main
 
-import "C"
 import (
 	"fmt"
-	"gin-mongo-demo/dao"
-	"gin-mongo-demo/entity"
+
+	"gin-mongo-demo/config"
+	"gin-mongo-demo/controller"
+	"gin-mongo-demo/controller/user"
+
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/web"
@@ -17,38 +19,30 @@ func init() {
 }
 func main() {
 	consulReg := consul.NewRegistry(
-		registry.Addrs("127.0.0.1:8500"),
+		registry.Addrs(config.Consul.Addr),
 	)
-	r := gin.Default()
-	r.GET("hello", func(context *gin.Context) {
-		context.JSON(200, gin.H{"message": "hello"})
-	})
-	r.POST("getByName", func(context *gin.Context) {
-		user := entity.User{}
-		err := context.Bind(&user)
-		if err != nil {
-			panic(err)
-		}
-		context.JSON(200, gin.H{"message": dao.GetByName(user.Name)})
-	})
-	r.POST("/createUser", func(context *gin.Context) {
-		user := entity.User{}
-		err := context.Bind(&user)
-		if err != nil {
-			panic(err)
-		}
-		dao.Insert(user)
-	})
+
+	engine := gin.New()
+
+	InitRoute(engine)
+
 	server := web.NewService(
-		web.Address(":8001"),
-		web.Handler(r),
+		web.Address(fmt.Sprintf(":%d", config.ListenPort)),
+		web.Handler(engine),
 		web.Registry(consulReg),
-		web.Name("micro-demo"),
+		web.Name(config.AppName),
 		web.Metadata(map[string]string{"protocol": "http"}),
 	)
-	//server.Init()
+
 	err := server.Run()
+
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("event=server_start_err err=%s", err)
 	}
+}
+
+func InitRoute(g *gin.Engine) {
+	controller.Include(user.InitRouter)
+
+	controller.Init(g)
 }

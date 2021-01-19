@@ -1,4 +1,4 @@
-POST 127.0.0.1:8001/createUser
+POST {{baseUrl}}/user/create_user
 Content-Type: application/json
 
 {

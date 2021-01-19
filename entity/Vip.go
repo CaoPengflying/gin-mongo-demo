@@ -3,12 +3,12 @@ package entity
 import "time"
 
 type Vip struct {
-	Name        string       `bson:"name"`
-	Mobile      string       `bson:"mobile"`
-	VipNo       string       `bson:"vip_no"`
-	Integral    Integral     `bson:"integral"`
-	ChangeFlows []ChangeFlow `bson:changeFlows`
-	Areas       []Area       `bson:areas`
+	Name        string        `json:"name" bson:"name"`
+	Mobile      string        `json:"mobile" bson:"mobile"`
+	VipNo       string        `json:"vip_no" bson:"vip_no"`
+	Integral    Integral      `json:"integral" bson:"integral"`
+	ChangeFlows []ChangeFlow `json:"change_flows,omitempty" bson:"change_flows,omitempty"`
+	Areas       []Area       `json:"areas" bson:"areas"`
 }
 type Integral struct {
 	LeftInte     int       `bson:"left_inte"`
@@ -16,9 +16,10 @@ type Integral struct {
 	DeadlineDate time.Time `bson:"deadline_date"`
 }
 
+//changeFlow
 type ChangeFlow struct {
-	ChangeTime time.Time `bson:"deadline_date"`
-	ChangeInfo string    `bson:"change_info"`
+	ChangeTime time.Time `json:"change_time" bson:"deadline_date"`
+	ChangeInfo string    `json:"change_info" bson:"change_info"`
 }
 
 type Area struct {

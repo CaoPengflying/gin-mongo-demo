@@ -1,4 +1,4 @@
-package dao
+package vip
 
 import (
 	"gin-mongo-demo/entity"
@@ -23,6 +23,7 @@ func TestInsertVip(t *testing.T) {
 }
 
 func TestGetVipByName(t *testing.T) {
-	vip := GetVipByName("cpf")
+	vip := GetByName("cpf")
 	t.Log(vip)
 }
+

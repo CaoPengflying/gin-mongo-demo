@@ -1,4 +1,4 @@
-package dao
+package user
 
 import (
 	"gin-mongo-demo/entity"
@@ -7,9 +7,31 @@ import (
 	"testing"
 )
 
+func TestRead(t *testing.T) {
+	for true {
+		age := 20
+		userList := ListByGtAge(age)
+		t.Log(userList)
+	}
+}
+
+func TestWrite(t *testing.T) {
+	for i := 0; i < 10000000; i++ {
+		name := "000000" + strconv.Itoa(i)
+		user := entity.User{
+			Name:   name[len(name)-6:],
+			UserNo: name[len(name)-6:],
+			Age:    27,
+			OrgNo:  "A" + name[len(name)-6:],
+		}
+		Insert(user)
+		t.Log(name)
+	}
+}
+
 func TestInsert(t *testing.T) {
 	user := entity.User{
-		Name:   "003",
+		Name:   "004",
 		UserNo: "0003",
 		Age:    27,
 		OrgNo:  "A003",
@@ -32,49 +54,29 @@ func TestInsertList(t *testing.T) {
 
 }
 
-func TestGetByName(t *testing.T) {
-	name := "002"
-	user := GetByName(name)
-	t.Log(user)
-}
 
-func TestGetByOrgNo(t *testing.T) {
-	orgNo := "A001"
-	userList := ListByOrgNo(orgNo)
-	t.Log(userList)
-}
 
-func TestGetByOrgNoAndName(t *testing.T) {
-	orgNo := "A001"
-	name := "test_d1"
-	list := GetByOrgNoOrName(orgNo, name)
-	t.Log(list)
-}
-
-func TestListByOrgNos(t *testing.T) {
-	orgNos := []string{"A001", "A002"}
-	userList := ListByOrgNos(orgNos)
-	t.Log(userList)
-
-}
-
-func TestListByGtAge(t *testing.T) {
-	age := 20
-	userList := ListByGtAge(age)
-	t.Log(userList)
-}
-
-func TestListByNotEq(t *testing.T) {
-	name := "cpf"
-	userList := ListByNotEq(name)
-	t.Log(userList)
+func TestUpdateByName(t *testing.T) {
+	name := "003"
+	//user := GetByName(name)
+	//user.UserNo = "0004"
+	user := &entity.User{
+		UserNo: "0002",
+		Name: name,
+	}
+	UpdateByName(user)
 }
 
 func TestUpdateById(t *testing.T) {
-	name := "002"
-	user := GetByName(name)
-	user.UserNo = "0004"
-	UpdateByName(user)
+	u1 := GetByName("004")
+	//user := GetByName(name)
+	//user.UserNo = "0004"
+	user := map[string]interface{}{}
+	user["user_no"] = "0004"
+	err := UpdateById(u1.Id,user)
+	if err != nil {
+		t.Log(err)
+	}
 }
 
 func TestDeleteById(t *testing.T) {

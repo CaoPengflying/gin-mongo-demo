@@ -5,9 +5,5 @@ const (
 )
 
 const (
-	ColUser = "user"
-)
-
-const (
 	PageOffset = 99
 )

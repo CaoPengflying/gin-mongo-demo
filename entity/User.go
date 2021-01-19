@@ -8,6 +8,7 @@ type User struct {
 	UserNo string        `bson:"user_no"`
 	Age    int           `bson:"age"`
 	OrgNo  string        `bson:"org_no"`
+	a      string
 }
 
 const (

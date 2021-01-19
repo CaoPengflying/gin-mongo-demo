@@ -1,0 +1,11 @@
+redis:
+  addr: 81.68.180.162
+  port: 6379
+  password: BYjv49etb8I2I3KI
+  db: 5
+
+mongo:
+  url: mongodb://81.68.180.162:27017,81.68.180.162:27018,81.68.180.162:27019?maxPoolSize=50
+
+consul:
+  addr: 127.0.0.1:8500
