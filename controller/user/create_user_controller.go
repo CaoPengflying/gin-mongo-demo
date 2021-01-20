@@ -1,7 +1,7 @@
 package user
 
 import (
-	"log"
+	"gin-mongo-demo/middleware/clog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,9 +20,10 @@ func CreateUser(ctx *gin.Context) {
 	var req CreateUserReq
 	err := ctx.Bind(&req)
 	if err != nil {
-		log.Printf("event=parse_create_user_req_fail err=%v", err)
+		clog.InfoC(ctx, "event=parse_create_user_req_fail err=%v", err)
 		return
 	}
+	clog.InfoC(ctx, "create_user")
 
 	ctx.JSON(http.StatusOK, "create user success")
 

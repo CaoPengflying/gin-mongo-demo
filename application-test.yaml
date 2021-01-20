@@ -1,10 +1,24 @@
 application:
   name: gin-mongo-demo
-  port: 52308
-  redis:
-    addr: 81.68.180.162
-    port: 6379
-    password: BYjv49etb8I2I3KI
-    db: 5
-  mongo:
-    url: mongodb://81.68.180.162:27017,81.68.180.162:27018,81.68.180.162:27019?maxPoolSize=50
+  port: 8001
+
+redis:
+  addr: 81.68.180.162
+  port: 6379
+  password: BYjv49etb8I2I3KI
+  db: 5
+
+mongo:
+  url: mongodb://81.68.180.162:27017,81.68.180.162:27018,81.68.180.162:27019?maxPoolSize=50
+
+consul:
+  addr: 127.0.0.1:8500
+
+clog:
+  fileConfig:
+    logFilePath: "./log/" #文件输出路径
+    maxSize: 1024  #文件最大尺寸,以MB为单位，超过即创建第二个文件
+    maxBackups: 2  #最大备份文件数
+    maxAge: 7  #保存时间
+    console: true #是否是需要控制台输出
+    levelString: debug #日志输出等级，debug,info,warn,error,panic,fatal

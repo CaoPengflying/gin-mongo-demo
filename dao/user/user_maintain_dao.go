@@ -1,17 +1,16 @@
 package user
 
 import (
-	"gin-mongo-demo/constants"
 	"gin-mongo-demo/entity"
+	"gin-mongo-demo/middleware/clog"
 	"gopkg.in/mgo.v2/bson"
-
 )
 
 /**
 插入一个文档
 */
 func Insert(u entity.User) {
-	session,c := GetUserSession()
+	session, c := GetUserSession()
 	defer session.Close()
 
 	err := c.Insert(u)
@@ -21,18 +20,18 @@ func Insert(u entity.User) {
 }
 
 func UpdateByName(user *entity.User) {
-	session,c := GetUserSession()
+	session, c := GetUserSession()
 	defer session.Close()
 
 	query := bson.M{entity.UserName: user.Name}
 	err := c.Update(query, user)
 	if err != nil {
-		log.Fatal(err)
+		clog.Error("event=update_by_name_fail err=%v", err)
 	}
 }
 
 func UpdateById(id interface{}, data map[string]interface{}) error {
-	session,c := GetUserSession()
+	session, c := GetUserSession()
 	defer session.Close()
 
 	update := bson.M{
@@ -47,10 +46,8 @@ func UpdateById(id interface{}, data map[string]interface{}) error {
 根据主键删除文档
 */
 func DeleteById(id bson.ObjectId) error {
-	session,c := GetUserSession()
+	session, c := GetUserSession()
 	defer session.Close()
 
 	return c.RemoveId(id)
 }
-
-

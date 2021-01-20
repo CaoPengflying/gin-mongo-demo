@@ -15,7 +15,5 @@
 .vscode
 .idea/
 log/
-xng_server
 *.html
 *.log
-xng-server

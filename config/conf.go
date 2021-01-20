@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"gin-mongo-demo/middleware/clog"
 	"go.uber.org/config"
 	"log"
 	"os"
@@ -21,10 +22,14 @@ var (
 	MongoDbs MongoMap
 
 	Consul ConsulConf
+
+	LogConf clog.Config
 )
 
 func init() {
 	loadConf()
+
+	clog.Init(&LogConf, AppName)
 }
 
 func loadConf() {
@@ -33,8 +38,13 @@ func loadConf() {
 	var env string
 	flag.StringVar(&env, "env", "dev", "set env")
 
+	flag.Parse()
+
 	configDir := getConfDir()
 	configName := fmt.Sprintf("application-%s.yaml", env)
+	log.Printf("configName=%s", configName)
+
+
 	configPath := path.Join(configDir, configName)
 	opt := config.File(configPath)
 	conf, err := config.NewYAML(opt)
@@ -49,8 +59,19 @@ func loadConf() {
 
 	loadConsulInfo(conf)
 
+	loadLogConf(conf)
+
 }
 
+//loadLogConf 加载日志配置信息
+func loadLogConf(conf *config.YAML) {
+	err := conf.Get("clog").Populate(&LogConf)
+	if err != nil {
+		panic("file_log_config_is_not_found")
+	}
+}
+
+// loadConsulInfo 加载注册中心
 func loadConsulInfo(conf *config.YAML) {
 	err := conf.Get("consul").Populate(&Consul)
 	if err != nil {
@@ -58,6 +79,7 @@ func loadConsulInfo(conf *config.YAML) {
 	}
 }
 
+// loadAppInfo 加载应用信息
 func loadAppInfo() {
 	configDir := getConfDir()
 	configName := fmt.Sprintf("application.yaml")
