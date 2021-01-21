@@ -1,21 +1,19 @@
-FROM golang:1.14 as build
+FROM golang:1.14-alpine as build
 
-ENV GO111MODULE=ON
-ENV GOPROXY=https://goproxy.io,direct
+ENV GOPROXY=https://goproxy.io
 
-WORKDIR /go/cache
+WORKDIR /usr/src/app
 
-ADD go.mod .
-ADD go.sum .
+COPY ./go.mod ./
+COPY ./go.sum ./
 RUN go mod download
 
-WORKDIR /go/release
 
-ADD . .
+COPY . .
 
-RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o app main.go
+RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o server main.go
 
-FROM scratch
+FROM scratch as runner
 
-COPY --from=build /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-COPY --from=build /go/release/app /
+COPY --from=build /usr/src/app/server /opt/app/
+
