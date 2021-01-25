@@ -10,6 +10,7 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"testing"
 )
 
 var (
@@ -38,6 +39,7 @@ func loadConf() {
 	var env string
 	flag.StringVar(&env, "env", "dev", "set env")
 
+	testing.Init()
 	flag.Parse()
 
 	configDir := getConfDir()

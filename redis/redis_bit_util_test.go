@@ -2,7 +2,6 @@ package redis
 
 import (
 	"context"
-	"gin-mongo-demo/config"
 	"github.com/go-redis/redis/v8"
 	"testing"
 )
@@ -14,8 +13,8 @@ const (
 var rdb *redis.Client
 var ctx = context.Background()
 
-func Init() {
-	rdb = config.GetRedisClient()
+func init() {
+	rdb = GetRedisClient()
 }
 func TestSetUserKey(t *testing.T) {
 	rdb.SAdd(ctx, userKey, 10000,10001,10002,10003,10004,10005)
@@ -35,7 +34,6 @@ func TestGetSet(t *testing.T) {
 
 //差集
 func TestUnion(t *testing.T) {
-	rdb := config.GetRedisClient()
 	ctx := context.Background()
 	diff := rdb.SDiff(ctx, userKey, todayUserKey).Val()
 	t.Log(diff)
@@ -55,11 +53,11 @@ func TestGetBit(t *testing.T) {
 }
 
 func TestBitCount(t *testing.T) {
-	Init()
-	bitcount := redis.BitCount{
+
+	bitCount := redis.BitCount{
 		0,
 		29,
 	}
-	val := rdb.BitCount(ctx,"uid:sign:3000:202011",&bitcount).Val()
+	val := rdb.BitCount(ctx,"uid:sign:3000:202011",&bitCount).Val()
 	t.Log(val)
 }
