@@ -25,6 +25,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 	clog.InfoC(ctx, "create_user")
 
-	ctx.JSON(http.StatusOK, "create user success")
+
+	ctx.JSON(http.StatusOK, "create userdao success")
 
 }

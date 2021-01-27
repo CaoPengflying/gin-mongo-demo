@@ -5,7 +5,7 @@ import (
 )
 
 func InitRouter(g *gin.Engine) {
-	group := g.Group("user")
+	group := g.Group("userdao")
 
 	group.POST("create_user", CreateUser)
 }

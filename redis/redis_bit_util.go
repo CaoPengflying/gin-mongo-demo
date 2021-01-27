@@ -9,13 +9,14 @@ const BitOneValue = 1
 const BitZeroValue = 0
 
 //位图：设置偏移量offset的值
-func SetBit(ctx context.Context, key string, offset int64, value bool) {
-	client := GetRedisClient()
+func SetBit(ctx context.Context, client *redis.Client, key string, offset int64, value bool) error {
 	if value {
-		client.SetBit(ctx, key, offset, BitOneValue)
-	} else {
-		client.SetBit(ctx, key, offset, BitZeroValue)
+		cmd := client.SetBit(ctx, key, offset, BitOneValue)
+		return cmd.Err()
 	}
+
+	cmd := client.SetBit(ctx, key, offset, BitZeroValue)
+	return cmd.Err()
 }
 
 //位图：获取偏移量offset的值

@@ -1,4 +1,4 @@
-package user
+package userdao
 
 import (
 	"gin-mongo-demo/config"
@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ColUser = "user"
+	ColUser = "userdao"
 )
 
 var userSession *mgo.Session

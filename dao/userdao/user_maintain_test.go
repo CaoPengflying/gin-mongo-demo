@@ -1,16 +1,19 @@
-package user
+package userdao
 
 import (
+	"context"
 	"gin-mongo-demo/entity"
 	"github.com/stretchr/testify/require"
 	"strconv"
 	"testing"
 )
 
+var userMaintain = UserMaintain{}
+
 func TestRead(t *testing.T) {
 	for true {
 		age := 20
-		userList := ListByGtAge(age)
+		userList := userQuery.ListByGtAge(age)
 		t.Log(userList)
 	}
 }
@@ -24,7 +27,7 @@ func TestWrite(t *testing.T) {
 			Age:    27,
 			OrgNo:  "A" + name[len(name)-6:],
 		}
-		Insert(user)
+		userMaintain.Insert(user)
 		t.Log(name)
 	}
 }
@@ -36,7 +39,7 @@ func TestInsert(t *testing.T) {
 		Age:    27,
 		OrgNo:  "A003",
 	}
-	Insert(user)
+	userMaintain.Insert(user)
 }
 
 func TestInsertList(t *testing.T) {
@@ -49,49 +52,47 @@ func TestInsertList(t *testing.T) {
 			Age:    27,
 			OrgNo:  "A" + name[len(name)-6:],
 		}
-		Insert(user)
+		userMaintain.Insert(user)
 	}
 
 }
-
-
 
 func TestUpdateByName(t *testing.T) {
 	name := "003"
-	//user := GetByName(name)
-	//user.UserNo = "0004"
+	//userdao := GetByName(name)
+	//userdao.UserNo = "0004"
 	user := &entity.User{
 		UserNo: "0002",
-		Name: name,
+		Name:   name,
 	}
-	UpdateByName(user)
+	userMaintain.UpdateByName(user)
 }
 
 func TestUpdateById(t *testing.T) {
-	u1 := GetByName("004")
-	//user := GetByName(name)
-	//user.UserNo = "0004"
+	u1, _ := userQuery.GetByName(context.Background(), "004")
+	//userdao := GetByName(name)
+	//userdao.UserNo = "0004"
 	user := map[string]interface{}{}
 	user["user_no"] = "0004"
-	err := UpdateById(u1.Id,user)
+	err := userMaintain.UpdateById(u1, user)
 	if err != nil {
 		t.Log(err)
 	}
 }
 
 func TestDeleteById(t *testing.T) {
-	tests := []struct{
-		name string
+	tests := []struct {
+		name    string
 		wantErr bool
 	}{
 		{
-			"000000",false,
+			"000000", false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			user := GetByName(tt.name)
-			err := DeleteById(user.Id)
+			user, _ := userQuery.GetByName(context.Background(), tt.name)
+			err := userMaintain.DeleteById(user.Id)
 			require.Equalf(t, tt.wantErr, err != nil, "delete by id error = %v", err, tt.wantErr)
 		})
 	}
